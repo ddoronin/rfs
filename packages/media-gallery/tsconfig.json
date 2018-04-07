@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "module": "commonjs",
+    "target": "es5",
+    "jsx": "react",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
+    "lib": [
+        "dom",
+        "dom.iterable",
+        "scripthost",
+        "esnext",
+        "esnext.array",
+        "esnext.asynciterable",
+        "es7",
+        "es6",
+        "es2015.symbol",
+        "es2015.symbol.wellknown"
+    ]
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}
