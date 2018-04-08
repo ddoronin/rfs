@@ -6,3 +6,41 @@ html, body {
     margin: 0;
     padding: 0;
 }
+
+a {
+    color: $a-color;
+}
+
+.debugger {
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 50%;
+    font-size: smaller;
+    color: $debugger-color;
+    border-top: 1px solid $debugger-color;
+    background-color: $debugger-bgcolor;
+
+    .actions, .state {
+        margin: 0;
+        padding: 0;
+        overflow-y: scroll;
+        position: absolute;
+        top: 0;
+        float: left;
+        width: 50%;
+        height: 100%;
+        box-sizing: border-box;
+        word-break: break-all;
+    }
+
+    .actions{
+        left: 0;
+    }
+
+    .state {
+        right: 0;
+    }
+}

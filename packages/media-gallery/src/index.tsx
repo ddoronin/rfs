@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './reduxConfig';
 import App from './App';
 import '../styles/main.scss';
-import { hot } from 'react-hot-loader'
+import { hot } from 'react-hot-loader';
 
 const elementId = 'app';
 let appEl = document.getElementById(elementId);
-if(!appEl){
+if(!appEl) {
     appEl = document.createElement('div');
     appEl.id = elementId;
     document.body.appendChild(appEl);

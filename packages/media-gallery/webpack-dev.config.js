@@ -8,6 +8,7 @@ const PORT_NUMBER = 3000;
 
 module.exports = {
 	mode: 'development',
+
 	entry: [
 		'react-hot-loader/patch',
 
@@ -21,10 +22,13 @@ module.exports = {
 
 		'./src/index.tsx'
 	],
+
 	devtool: 'source-map',
+
 	resolve: {
 		extensions: [".ts", ".tsx", ".js", ".json"]
 	},
+
 	output: {
 		path: path.resolve(__dirname, 'public'),
 
@@ -32,6 +36,7 @@ module.exports = {
 
 		publicPath: '/'
 	},
+
 	module: {
 		rules: [
 			{
@@ -80,6 +85,7 @@ module.exports = {
 				}]
 			}]
 	},
+
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
 		// enable HMR globally

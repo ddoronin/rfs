@@ -7,7 +7,7 @@
   "author": "Dima Doronin",
   "license": "MIT",
   "scripts": {
-    "debug": "./node_modules/.bin/webpack-dev-server --config webpack-dev.config.js --color --progress --open",
+    "debug": "./node_modules/.bin/webpack-dev-server --config webpack-dev.config.js --color --progress --client-log-level none",
     "build": "./node_modules/.bin/webpack --progress --colors",
     "start": "yarn build"
   },
@@ -33,9 +33,11 @@
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "react-hot-loader": "^4.0.1",
+    "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^4.0.8",
     "redux": "^4.0.0-beta.2",
-    "redux-router": "^2.1.2",
     "redux-saga": "^0.16.0",
     "resolve-url-loader": "^2.3.0",
     "sass-loader": "^6.0.7",
