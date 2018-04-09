@@ -4,28 +4,29 @@ import { initStore } from './reduxConfig';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { Action, Dispatch, Store } from "redux";
 import { IState } from "./reducers";
+import FileManager from "./containers/FileManager";
+import FilePicker from "./components/FilePicker";
 
 const store = initStore();
 
-interface IStoreRC<S> {
-    render: (state: S, dispatch: Dispatch<Action<any>>, actions: any[]) => React.ReactNode
-}
-
 interface IStoreState<S> {
     state: S
-    dispatch: Dispatch<Action<any>>
+    dispatch: (action: Action<any> & any) => Action<any> & any;
     actions: any[]
 }
 
-class StoreProvider extends React.Component<IStoreRC<IState>, IStoreState<IState>>  {
+class StoreProvider extends React.Component<{}, IStoreState<IState>>  {
+    private actions: Action<any>[] = [];
+
     constructor(props, context) {
         super(props, context);
 
         this.state = {
             state: store.getState(),
             actions: [],
-            dispatch: (action: Action<any>):any => {
-                this.setState({actions: [action, ...this.state.actions]});
+            dispatch: (action: Action<any>) => {
+                this.actions = [action, ...this.actions];
+                this.setState({actions: this.actions});
                 return store.dispatch(action);
             }
         }
@@ -44,19 +45,48 @@ class StoreProvider extends React.Component<IStoreRC<IState>, IStoreState<IState
             dispatch,
             actions
         } = this.state;
-        return <>{this.props.render(state, dispatch, actions)}</>;
+
+        return (
+            <Router>
+            <RouterDispatcher dispatch={dispatch}>
+                <article className="page">
+                    <header>
+                        <Link to="/"> Home/</Link>
+                        <Link to="/queue">Queue/</Link>
+                        <Link to="/succeeded">Succeeded/</Link>
+                        <Link to="/failed">Failed/</Link>
+                    </header>
+                    <div onClick={() => dispatch({type: 'TOGGLE_DEBUGGER'})}>
+                        Click to {!state.debugger.visible ? 'show': 'hide'} debugger.
+                    </div>
+                    <Route exact path="/" render={() =>
+                        <FilePicker
+                            handleFiles={(files) =>
+                                dispatch({type: 'NEW_FILES', files})
+                            }>
+                        <FileManager
+                            files={state.files.data}
+                            beforeRender={() => dispatch({type: 'REFRESH'})}
+                            refresh={() => dispatch({type: 'REFRESH'})}
+                            refreshStatus={state.files.refreshStatus} />
+                        </FilePicker>
+                    } />
+                    <Route path="/queue" component={() => <>Queue</>} />
+                    {state.debugger.visible && <footer className="debugger">
+                        <ActionDebugger actions={actions}/>
+                        <StateDebugger state={state}/>
+                    </footer>}
+                </article>
+            </RouterDispatcher>
+        </Router>);
     }
 }
 
-interface IRouteHandler {
-    routeParams: any
+interface IDispatcher {
+    dispatch: (action: Action<any>) => Action<any>
 }
 
-interface IDispatcher<T> {
-    dispatch: Dispatch<Action<T>>
-}
-
-class RouterDispatcher extends React.Component<IDispatcher<any>, {}> {
+class RouterDispatcher extends React.Component<IDispatcher, {}> {
     static contextTypes = {
         router: PropTypes.object
     };
@@ -74,7 +104,7 @@ class RouterDispatcher extends React.Component<IDispatcher<any>, {}> {
     }
 
     handleLocationChange(location) {
-        this.props.dispatch({type: 'ROUTE', params: location});
+        this.props.dispatch({type: 'ROUTE', params: location} as any);
     }
 
     render() {
@@ -100,28 +130,5 @@ const ActionDebugger = ({actions}) => (
     </div>
 );
 
-const StateRouter = (state: IState, dispatch: Dispatch<Action<any>>, actions: any[]) => (
-    <Router>
-        <RouterDispatcher dispatch={dispatch}>
-            <article className="page">
-                <header>
-                    <Link to="/"> Home/</Link>
-                    <Link to="/queue">Queue/</Link>
-                    <Link to="/succeeded">Succeeded/</Link>
-                    <Link to="/failed">Failed/</Link>
-                </header>
-                <div onClick={() => dispatch({type: 'TOGGLE_DEBUGGER'})}>
-                    Click to {!state.debugger.visible ? 'show': 'hide'} debugger.
-                </div>
-                <Route exact path="/" component={() => <>Media Gallery</>} />
-                <Route path="/queue" component={() => <>Queue</>} />
-                {state.debugger.visible && <footer className="debugger">
-                    <ActionDebugger actions={actions}/>
-                    <StateDebugger state={state}/>
-                </footer>}
-            </article>
-        </RouterDispatcher>
-    </Router>
-);
   
-export default () => <StoreProvider render={StateRouter}/>;
+export default () => <StoreProvider/>;

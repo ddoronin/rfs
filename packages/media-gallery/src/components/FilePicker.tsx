@@ -7,7 +7,7 @@ interface IState{
 
 export interface IProps{
     children?: React.ReactNode,
-    handleFiles?: (files: FileList) => void
+    handleFiles?: (files: File[]) => void
 }
 
 class FilePicker extends React.Component<IProps, IState> {
@@ -24,7 +24,11 @@ class FilePicker extends React.Component<IProps, IState> {
         this.setState({draggingOverTarget: false});
         const files = event.dataTransfer.files;
         if(files){
-            this.props.handleFiles(files);
+            let fs = [];
+            for(let i = 0; i < files.length; i++){
+                fs[i] = files.item(i);
+            }
+            this.props.handleFiles(fs);
         }
     }
 

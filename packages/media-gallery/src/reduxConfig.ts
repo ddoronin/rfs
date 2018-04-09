@@ -11,11 +11,11 @@ export function initStore(): Store<IState, Action<any>>{
     // mount it on the Store
     const store = createStore<IState, Action<any>, {}, {}>(
         combineReducers(reducers),
-        applyMiddleware(logger)
+        applyMiddleware(logger, sagaMiddleware)
     );
 
     // then run the saga
-    //sagaMiddleware.run(sagas);
+    sagaMiddleware.run(sagas);
 
     return store;
 }
